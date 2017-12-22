@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue组件-内容分发</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+<div id="app">
+	<my-slot>
+		<p slot="title">{{title}}</p>
+		<div slot="content">{{content}}</div>
+		<p>others</p>
+	</my-slot>
+</div>
+
+<script type="text/javascript">
+// 父组件中没有slot="footer"的那么保留子组件的html结构
+//子组件<slot></slot>为匿名插槽，是默认插槽，如果没有找到匹配的则放入这里
+Vue.component('my-slot',{
+	template:'<div>\
+		<slot></slot>\
+	<div class="title">\
+		<slot name="title"></slot>\
+	</div>\
+	<div class="content">\
+		<slot name="content"></slot>\
+	</div>\
+	<div class="footer">\
+		<slot name="footer">footer</slot>\
+	</div>\
+	</div>'
+});
+var vm = new Vue({
+	el:'#app',
+	data:{
+		title:'this is a title',
+		content:'this is the content'
+	}
+})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue组件-组件注册</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+<!-- 全局注册 -->
+<div id="app">
+	<parent-component></parent-component>
+</div>
+
+<script type="text/javascript">
+
+//全局注册&局部注册
+	var Child = Vue.extend({
+		template:'<p>This is a child component</p>'
+	})
+	var parentComponent = Vue.extend({
+		template:'<div>\
+			<p>This is a parent component</p>\
+			<my-child></my-child>\
+			</div>',
+		components:{
+			'my-child':Child
+		}
+	})
+	// Vue.component('parent-component',parentComponent)需在var vm = new Vue({..})之前
+	Vue.component('parent-component',parentComponent);
+
+//注册语法糖,直接在注册的时候定义组件构造器选项
+	// Vue.component('parent-component',{
+	// 	template:'<div>\
+	// 		<p>This is a parent component</p>\
+	// 		<my-child></my-child>\
+	// 		</div>',
+	// 	components:{
+	// 		'my-child':{
+	// 			template:'<p>This is a child component</p>'
+	// 		}
+	// 	}
+	// })
+
+	var vm = new Vue({
+		el:'#app'
+	})
+</script>
+
+</body>
+</html>

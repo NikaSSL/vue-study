@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue组件-动态组件</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+<div id="app">
+	<ul>
+		<li @click="currentView='home'">HOME</li>
+		<li @click="currentView='list'">LIST</li>
+		<li @click="currentView='detail'">DETAIL</li>
+	</ul>
+	<!-- keep-alive属性修改为标签
+	将切换出去的组件保留在内存中，避免重新渲染 -->
+	<keep-alive>
+		<component :is="currentView"></component>
+	</keep-alive>
+	<!-- activate钩子函数效果对比样例 -->
+	<component :is="currentView"></component>
+</div>
+
+<script type="text/javascript">
+var vm = new Vue({
+	el:'#app',
+	data:{
+		currentView:'home'
+	},
+	components:{
+		home:{
+			template:'<div>\
+				<p>HOME</p>\
+				<ul>\
+					<li v-for="item in items">{{item}}</li>\
+				</ul>\
+			</div>',
+			data:function(){
+				return {
+					items:[1]
+				}
+			},
+			// ready替换，使用新的mounted钩子函数替代，使用 mounted并不能保证钩子函数中的 this.$el 在 document 中。为此还应该引入 Vue.nextTick/vm.$nextTick
+			mounted:function(){
+				console.log('fetch data');
+				this.items = [1,2,3];
+			},
+			// activated在<keep-alive>所嵌套组件触发
+			activated:function(){
+				var that = this;
+				console.log('activated');
+				setTimeout(function(){
+					that.items = [1,2,3,4];
+				},2000);
+			}
+		},
+		list:{
+			template:'<div>LIST</div>'
+		},
+		detail:{
+			template:'<div>DETAIL</div>'
+		}
+	}
+})
+</script>
+
+</body>
+</html>

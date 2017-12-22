@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue组件-组件选项</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+	<input type="text" v-model="message2"/>
+	<my-component v-bind:message2="message2"></my-component>
+</div>
+
+<script type="text/javascript">
+//1、组件选项中的data需要通过函数返回一个新对象，否则该组件的所有实例会共享一个data对象
+//2、组件props,驼峰命名（在标签中使用“-”方式分隔，则在props中可使用驼峰形式命名）
+	// Vue.component('my-component',{
+	// 	props:['parentData'],
+	// 	template:'<p>{{name}} is from my-component,{{parentData}} is from parent</p>',
+	// 	data:function(){
+	// 		return {
+	// 			name:'my-component'
+	// 		}
+	// 	}
+	// });
+	
+	// 动态props
+	// Vue.component('my-component',{
+	// 	props:['message'],
+	// 	template:"<p>{{'From parent:'+message}}</p>"
+	// })
+	// var vm = new Vue({
+	// 	el:'#app',
+	// 	data:{
+	// 		message:'default'
+	// 	}
+	// })
+	
+	//props验证
+	//1、基础类型检测
+	//2、多种类型检测（prop:[Number,String]）
+	//3、参数必需(prop:{type:Number,required:true})
+	//4、参数默认(prop:{type:Number,default:10})
+	//5、自定义验证函数
+	Vue.component('my-component',{
+		props:{
+			message1:Number,
+			message2:{
+				type:Number,
+				validator:function(value){
+					return value > 10;
+				}
+			}
+		},
+		template:"<p>{{'From parent:'+message2}}</p>"
+	})
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			message1:5,
+			message2:12
+		}
+	})
+	
+</script>
+
+</body>
+</html>

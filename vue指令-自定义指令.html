@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue指令-自定义指令</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+<!-- 
+
+	* 注册指令
+
+		* Vue.directive(id,definition)注册一个全局自定义指令
+		* 通过在组件的directives选项注册一个局部的自定义指令
+
+			* 指令只能在当前组件内通过v-local-directive的方式调用，且无法被其它组件调用
+	* 指令的定义对象
+
+		* definition定义对象，可对指令赋予一些特殊的功能，其主要包含三个钩子函数：bind、update和unbind，三个函数都是可选的【2.0新增componentUpdated】
+
+			* bind——值被吊用一次，在指令第一次绑定到元素上时调用
+			* update——指令在bind 之后以初始值为参数进行第一次调用，之后每次当绑定至发生变化时调用，update接收参数为newValue和oldValue；
+
+				* 2.0中做了以下修改
+
+					* 指令绑定bind函数执行后不直接调用update函数
+					* 只要组件发生重绘，无论指令接受的值是否发生变化，均会调用update函数
+			* unbind——指令从元素上解绑时调用，只调用一次
+			* componentUpdated——当整个组件都完成了update状态后即所有DOM都更新后调用该钩子函数，无论指令接受的参数是否发生变化
+		* 若只需要update函数时，我们可以直接传一个函数代替定义对象
+		* 自定义指令绑定的值可是vm实例中data的属性，或是直接绑定字符串常量，或使用字面修饰符，此外也可接受对象字面量或任意合法的JS表达式。但注意当值为字符串时update方法只能调用一次，因为普通字符串不能影响数据变化
+	* 指令实例属性（在指令的钩子函数内，可通过this来调用指令实例）【2.0中取消了指令实例这一概念，在钩子函数中的this不能指向指令的相关属性，指令的相关属性均通过参数的形式传递给钩子函数，分别是el、biding（1.0的实例中的属性大部分能在这里找到，该对象不可更改，强制设定它的值不会引起实际的改动）、vnode（主要包含了节点相关信息）】
+
+		* el：指令绑定的元素
+		* vm：指令的上下文ViewModel，可为new Vue（）的实例，也可为组件实例
+		* expression：指令表达式，不包括参数和过滤器
+		* arg：指令的参数 
+		* name：指令的名字，不含前缀
+		* modifiers：一个对象，包含指令的修饰符
+		* descriptor：一个对象，包含指令的解析结果
+ -->
+
+
+<div id="app">
+	<!-- <div v-if="isExist" v-global-directive="param"></div> -->
+	<!-- 绑定字符串需要加单引号 -->
+	<!-- <div v-global-directive="'constant string'"></div> -->
+	<!-- 指令可接受对象字面量或任意合法的JS表达式 -->
+	<!-- <div v-global-directive="{title:'Vue.js',description:'hhh'}"></div> -->
+	<!-- <div v-global-directive="isExist?'yes':'no'"></div> -->
+	<div v-global-directive:console.log="content" a="paramA"></div>
+</div>
+
+<script type="text/javascript">
+
+	// 局部自定义指令
+	// 该指令只能在当前组件内通过v-local-directive的方式调用
+	// var comp = Vue.extend({
+	// 	directives: {
+	// 		'localDirective':{}
+	// 	}
+	// })
+	
+	// 全局自定义指令
+	Vue.directive('global-directive',{
+		params:['a'],
+		bind: function(el,binding,vnode){
+		//只被调用一次，在指令第一次绑定到元素上时调用
+		//1.0的实例中属性大部分都能在binding中找到，vnode则主要包含节点的相关信息
+			console.log('———————————————————————bind—————————————————————————');
+			console.log('el',el);
+			console.log('binding',binding);
+			console.log('vnode',vnode);
+			console.log('params',this.params);
+		},
+		update: function(newValue,oldValue){
+		//指令在bind之后以初始值为参数进行第一次调用，之后每次绑定值发生变化都调用
+			var keys = Object.keys(this.modifiers);
+			window[this.arg][keys[0]](newValue);
+		},
+		componentUpdated: function(){
+		// 指令所在组件的 VNode 及其子 VNode 全部更新后调用
+			console.log('componentUpdated',arguments);
+		},
+		unbind: function(){
+		//指令从元素上解绑时调用，仅调用一次
+			console.log('unbind',arguments);
+		}
+	})
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			isExist:true,
+			param:'first',
+			content:'there is the content'
+		}
+	})
+</script>
+
+</body>
+</html>

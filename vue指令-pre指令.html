@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue指令-pre指令</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+
+<!-- 
+	* v-pre
+
+		* 跳过编译这个元素和种子元素，显示原始的{{}}标签，用于减少编译时间
+
+ -->
+
+
+<div id="app">
+	<div v-pre>{{title}}</div>
+</div>
+
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			title:'v-pre',
+		}
+	})	
+</script>
+
+</body>
+</html>

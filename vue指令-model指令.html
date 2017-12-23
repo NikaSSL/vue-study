@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue指令-model指令</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+
+<!-- 
+	* v-model
+
+		* 实现对表单元素的双向数据绑定
+		* Text（输入框）
+		* Radio（单选框）
+		* CheckBox（勾选框）—— 分为单个勾选框和多个勾选框，多选时绑定到一个数组中
+		* Select（选择框）—— 分位单选和多选两种，多选时绑定到一个数组中
+		* 绑定value——表单控件的值可绑定在Vue实例的动态属性上，用v-bind实现
+		* 修饰符：lazy、number、debounce（2.0废除）、trim（2.0新增）
+
+			* lazy
+			* number
+			* debounce
+			* trim
+
+ -->
+
+<form id="app">
+	<!-- Text(输入框) -->
+	<h1>Text(输入框)</h1>
+<!-- 	<input type="text" v-model.number="message"/>
+	<input type="text" v-model.lazy="message"/>
+ -->	<input type="text" v-model.trim="message">
+	<span>Your input is:{{message}}</span>
+	<br>
+	<!-- 单选框 -->
+	<h1>单选框</h1>
+	<label><input type="radio" value="male" v-model="gender">男</label>
+	<label><input type="radio" value="female" v-model="gender">女</label>
+	<p>性别：{{gender}}</p>
+	<br>
+	<!-- 勾选框-单个勾选框 -->
+	<h1>勾选框-单个勾选框</h1>
+	<input type="checkbox" v-model="checked"/>
+	<span>checked:{{checked}}</span>
+	<br>
+	<!-- 勾选框-多个勾选框 -->
+	<h1>勾选框-多个勾选框</h1>
+	<label><input type="checkbox" value="1" v-model="multiChecked">1</label>
+	<label><input type="checkbox" value="2" v-model="multiChecked">2</label>
+	<label><input type="checkbox" value="3" v-model="multiChecked">3</label>
+	<p>MultiChecked : {{multiChecked.join('|')}}</p>
+	<br>
+	<!-- 选择框-单个选择框 -->
+	<h1>选择框-单个选择框</h1>
+	<select v-model="selected">
+		<option selected="">A</option>
+		<option>B</option>
+		<option>C</option>
+	</select>
+	<span>Selected : {{selected}}</span>
+	<br>
+	<!-- 选择框-多个选择框 ,chrome中无法选择多个选项-->
+	<h1>选择框-多个选择框</h1>
+	<select v-model="multiSelected" multiple="multiple">
+		<option selected>A</option>
+		<option>B</option>
+		<option>C</option>
+	</select>
+	<br>
+	<span>MultiSelected : {{multiSelected.join('|')}}</span>
+</form>
+
+
+<script type="text/javascript"> 
+	var vm = new Vue({
+		el:"#app",
+		data:{
+			message: '',
+			gender:'',
+			checked:'',
+			multiChecked:[],
+			selected:'',
+			multiSelected:[]
+		}
+	})	
+</script>
+
+</body>
+</html>

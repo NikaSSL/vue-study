@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue指令</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+
+
+<!-- 	* v-if/v-else/v-show
+
+		* v-if/v-else 
+
+			* 根据数据值来判断是否输出该DOM元素，以及包含的子元素
+			* 注：v-else需要紧跟它配对的 v-if 才有效
+		* v-show
+
+			* 根据条件展示元素的一种指令
+			* 与v-if的对比
+
+				* 无论绑定值为false或true，均会渲染并保持在DOM中，对 display 属性值进行修改
+				* 当条件变化时，v-if  引发DOM操作级别的变化，而 v-show 仅发生了样式的变化
+				* v-if 是惰性的，当初始条件为假则什么都不做，而 v-show 仍会正常进行操作，然后将 display 值设为none
+				* 总：v-if 具有更高的切换消耗而v-show具有更高的渲染消耗
+
+ -->
+<div id="app">
+	<div v-if="yes">
+		<div v-if="inner">inner</div>
+		<div v-else>not inner</div>
+	</div>
+	<div v-else>no</div>
+	<div v-show="show">show</div>
+</div>
+
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			yes:true,
+			inner:false,
+			show:false
+		}
+	})	
+</script>
+
+</body>
+</html>

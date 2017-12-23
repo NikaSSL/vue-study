@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue指令-el指令&ref指令</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+
+<!-- 
+
+	* v-el
+
+		* 为DOM元素注册一个索引，以便直接访问DOM元素
+		* 通过所属实例的$els属性调用，或在vm内部用this进行调用
+		* v-el中如果使用了驼峰式命名，系统会自动转为小写，但可以使用“-”来连接单词
+	* v-ref
+
+		* 与v-el类似，其作用于子组件上，实例可通过$refs访问子组件
+		* 命名的话用“-”来连接
+		
+	* v-el和v-ref合并为ref属性，可在组件实例中用$refs调用，$refs是非响应的，因为它们在渲染过程中注册/更新，只有监听变化并重复渲染才能使它们响应
+ -->
+
+<div id="app">
+	<!-- <div v-el:demo>this is a el demo</div> -->
+	<div v-if="yes" ref="demo" @click="clickDemo">{{msg}}</div>
+</div>
+
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			msg:'hello,click me !'
+		},
+		methods:{
+			clickDemo:function(){
+				alert(this.$refs.demo.innerText);
+			}
+		}
+	})
+</script>
+
+</body>
+</html>

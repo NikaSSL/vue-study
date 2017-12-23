@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue指令-text指令</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+</head>
+<body>
+
+<!-- 
+	* v-text
+
+		* 参数为String，作用是更新元素的textContent
+		* v-text和{{}}的比较
+
+			* {{}}文本插值会变异成textNode的一个v-text指令
+			* v-text需要绑定在某个元素上，能避免未编译前闪现问题，{{}}文本插值可能会导致未编译闪现问题
+
+ -->
+
+<div id="app">
+	<span v-text="msg1"></span>
+	{{msg2}}
+</div>
+
+<script type="text/javascript">
+	var vm = new Vue({
+		el:'#app',
+		data:{
+			msg1:'v-text需要绑定在某个元素上，能避免未编译前闪现问题',
+			msg2:'我闪现了哟，哟呵呵呵~~'
+		}
+	})	
+</script>
+
+</body>
+</html>

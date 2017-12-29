@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vue插件-Vue-router插件-基础</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="vue.js"></script>
+<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+</head>
+<!-- 
+		 vue-router基础部分
+
+	1. 基本用法
+	2. 嵌套路由
+	3. 路由匹配
+	4. 命名路由
+	5. 路由对象
+	6. 向路由组件传递propps，使组件和路由解耦
+	7. 编程式导航
+
+ -->
+
+
+<body>
+    <div id="app">
+    	<nav class="navbar navbar-inverse">
+    		<div class="container">
+    			<div class="collapse navbar-collapse">
+    				<ul class="nav navbar-nav">
+    					<li>
+    						<!-- v-link指令，path的值对应跳转的路径，即#!/home -->
+    						<!-- <a v-link="{path:'/home'}">Home</a> -->
+    						<router-link to="/home">Home</router-link>
+    					</li>
+    					<li>
+    						<router-link to="/user/foo">动态路由匹配&向路由传递props解耦</router-link>
+    					</li>
+    					<li>
+    						<!-- 命名路由，注意to之前需加冒号 -->
+    						<router-link :to="{name:'list',params:{list:'List'}}">List</router-link>
+    					</li>
+    					<li>
+    						<router-link to="/biz">Business</router-link>
+    					</li>    					
+    				</ul>
+    			</div>
+    		</div>
+    	</nav>
+    	<div class="container">
+    		<!-- 路由切换组件tenplate插入位置 -->
+    		<router-view></router-view>
+    	</div>
+    	<button v-on:click='proNav'>点击我，跳转List页面内容(7.编程式导航demo)</button>
+    	<button v-on:click='routerObj'>点击我，显示路由对象相关内容（5. 路由对象）</button>
+    </div>
+
+	<template id="biz">
+		<div>
+	    	<h1>This is the some business channel</h1>
+	    	<div class=container>
+	    		<ul class="nav navbar-nav">
+	    			<li>
+	    				<router-link to="/biz/list">List</router-link>
+	    			</li>
+	    			<li>
+	    				<router-link to="/biz/detail">Detail</router-link>
+	    			</li>
+	    		</ul>
+	    	</div>
+	    	<router-view></router-view>
+		</div>
+	</template>
+
+    <script type="text/javascript">
+    	// 创建子组件，相当于路径对应的页面
+	    var Home = Vue.extend({
+	    	template:'<h1>This is the home page</h1>'
+	    });
+
+	    var User = Vue.extend({//向路由组件传递props
+	    	props:['id'],
+	    	template:'<h1>This is the User page.Your Id is {{id}}</h1>'
+	    });
+
+		var Biz = {template:'#biz'}
+
+	    // 创建路由器实例，定义路由规则，每条路由映射到一个组件，这个值可是由Vue.extend创建的组件构造函数，也可直接使用组件选项对象
+	    var router = new VueRouter({
+	    	routes:[
+	    		{path:'/home',component:Home},
+	    		// 3. 路由匹配，将匹配/user/foo
+	    		{path:'/user/:id',component:User,props:true},
+	    		//4. 命名路由
+	    		{path:'/list',name:'list',component:{
+	    			template:'<h1>This is the List {{$route.params.list}} page</h1>'
+	    		}},
+	    		// 2. 嵌套路由
+	 			{path:'/biz',component:Biz,children:[
+	 				{
+	 					path:'list',
+	 					component:{
+	 						template:'<h2>This is the business list page</h2>'
+	 					}
+	 				},
+	 				{
+	 					path:'detail',
+	 					component:{
+	 						template:'<h2>This is the business detail page</h2>'
+	 					}
+	 				}
+	 			]}
+	    	]
+	    });
+
+	    // 2.0中router.map替换，路由被定义为一个在router实例里的一个routes选项数组
+	    // router.map({
+	    // 	'/home':{
+	    // 		component:Home
+	    // 	},
+	    // 	'/list':{
+	    // 		component:{
+	    // 			template:'<h1>This is the List page</h1>'
+	    // 		}
+	    // 	}
+	    // })
+
+	    // router.start(App,'#app');
+	    
+	    var vm = new Vue({
+	    	el:'#app',
+	    	router:router,
+	    	methods:{
+	    		proNav:function(){//7. 编程式导航demo
+	    			// this.$router.push({path:'/list',params:{list:'LIST'}});无效
+	    			
+	    			// this.$router.push({name:'list',params:{list:'List'}});
+	    			
+	    			// this.$router.go(-1);
+	    			
+	    			//跟 router.push 很像，唯一的不同就是，它不会向 history 添加新记录，而是跟它的方法名一样 —— 替换掉当前的 history 记录
+	    			this.$router.replace({name:'list'});
+	    		},
+	    		routerObj:function(){//5. 路由对象
+	    			console.log('$route.path',this.$route.path);
+	    			console.log('$route.params',this.$route.params);
+	    			console.log('$route.query',this.$route.query);
+	    			console.log('$route.router',this.$route.router);
+	    			console.log('$route.matched',this.$route.matched);
+	    			console.log('$route.name',this.$route.name);
+	    		}
+	    	}
+	    })
+    </script>
+</body>
+</html>

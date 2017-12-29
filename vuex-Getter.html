@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vuex-Getter</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+<script src="https://unpkg.com/vuex"></script>
+</head>
+<body>
+<!-- 
+	 Getter可认为是store的计算属性
+	 getter的返回值会要根据它的依赖被缓存起来，切只有当它的依赖值发生改变才回被重新计算
+
+  -->   
+  	<div id="app"></div>
+
+    <script type="text/javascript">
+
+    const store = new Vuex.Store({
+    	state:{
+    		todos:[
+    			{id:1,text:'...',done:true},
+    			{id:2,text:'...',done:false}
+    		]
+    	},
+    	getters:{
+    		//Getter接受state作为其第一个参数
+    		doneTodos:state => {
+    			return state.todos.filter(todo => todo.done)
+    		},
+    		//Getter也可接受其他getter作为其第二个参数
+    		doneTodosCount: (state,getters) => {
+    			return getters.doneTodos.length
+    		},
+    		//让Getter返回一个函数，实现给getter传参
+    		getTodoById:(state) => id => {
+    			return state.todos.find(todo => todo.id === id)
+    		}
+    	}
+    })
+
+
+	const Counter = {
+		template:'<div>{{doneTodosCount}}  {{getTodoById}}</div>',
+		computed:{
+			doneTodosCount(){//组件中使用
+				return this.$store.getters.doneTodosCount;
+			},
+			getTodoById(){
+				return this.$store.getters.getTodoById(2);
+			}
+		}
+	}
+
+	const app = new Vue({
+		el:'#app',
+		store,//在根实例中注册 store 选项，该 store 实例会注入到根组件下的所有子组件中
+		components:{Counter},
+		template:'<div class="app">\
+		<counter></counter>\
+		</div>'
+	})
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vuex-Module</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+<script src="https://unpkg.com/vuex"></script>
+</head>
+<body>
+
+
+<!--     
+		利用Module将store分割成模块，每个模块拥有自己的state、mutation、action、action、getter，甚至是嵌套子模块，从上至下进行同样方式的分割
+		通过this.$store.state.a 获取子模块a的状态
+		注意：默认情况下，模块内部的 action、mutation 和 getter 是注册在全局命名空间的，所以默认情况下通过this.$store.getters.sumWithRootCount;调用子模块的getter。
+		
+		若希望模块具有更高的封装度和复用性，可以通过添加 namespaced:true （别忘了d）的方式使其为命名空间模式，当模块注册后，其所有getter、action及mutation都会自动根据模块注册的路径调整命名
+		
+		命名空间模块的相关调用方式，以本demo为例,子模块b为命名模块
+		this.$store.getters['b/tripleCount'];
+		this.$store.dispatch['b/incrementIfEvenOnRootSum'];
+		this.$store.commit('b/increment');
+ -->
+
+	<div id="app"></div>
+
+	<script type="text/javascript">
+	// 子模块A
+	const moduleA = {
+		state:{ count:1},
+		mutations:{
+			increment(state){
+				//这里的state对象是模块的局部状态
+				state.count++;
+			}
+		},
+		getters:{
+			doubleCount(state){
+				return state.count*2;
+			},
+			//对于模块内部的getter，根节点状态会作为第三个参数暴露出来
+			sumWithRootCount(state,getters,rootState){
+				return state.count + rootState.count;
+			}
+		},
+		actions:{
+			//对于模块内部的action，局部状态通过context.state暴露出来，根节点状态则为context.rootState
+			incrementIfOddOnRootSum({state,commit,rootState}){
+				if((state.count + rootState.count) % 2 === 1){
+					commit('increment');
+				}
+			}
+		}
+	}
+
+	//命名子模块B
+	const moduleB = {
+		namespaced:true,
+		state:{count:2},
+		getters:{
+			tripleCount(state){
+				console.log('hhh')
+				return state.count*3;
+			}
+		},
+		actions:{
+			incrementIfEvenOnRootSum({state,commit,rootState}){
+				if ((state.count + rootState.count) % 2 === 0)) {
+					commit
+				};
+			}
+		},
+		mutations:{
+			increment(state){
+				state.count++;
+			}
+		}
+	}
+
+	const store = new Vuex.Store({
+		state:{count:2},
+		modules:{
+			a:moduleA,
+			b:moduleB
+		}
+	})
+
+	const Counter = {
+		template:'<div>{{count}}</div>',		
+		computed:{
+			count(){
+				 return this.$store.getters['b/tripleCount'];
+				 // this.$store.state.a  //获取a的状态
+			}
+		}
+	}
+
+	const app = new Vue({
+		el:'#app',
+		store,
+		components:{Counter},
+		template:'<div class="app">\
+		<counter></counter>\
+		</div>'
+	})
+	</script>
+</body>
+</html>

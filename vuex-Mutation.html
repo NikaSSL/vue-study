@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>vuex-Mutation</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
+<link href="" rel="stylesheet">
+<script src="vue.js"></script>
+<script src="https://unpkg.com/vuex"></script>
+</head>
+<body>
+    
+<!-- 	
+	Mutation 是更改Vuex的store中的状态的唯一方法，每个mutation都有一个字符串的事件类型和一个回调函数
+
+    Mutation的注意事项
+
+	*     Mutation必须是同步函数
+	*     最好提前在你的 store 中初始化好所有所需属性。
+	*     当需要在对象上添加新属性时，你应该
+
+		*     使用 Vue.set(obj, 'newProp', 123), 或者
+		*     以新对象替换老对象。例如，利用 stage-3 的对象展开运算符我们可以这样写：
+			   state.obj = { ...state.obj, newProp: 123 }
+
+ -->
+
+  	<div id="app"></div>
+		
+	<script type="text/javascript">
+	const store = new Vuex.Store({
+		state:{
+			count:1
+		},
+		mutations:{
+			increment(state){
+				state.count++
+			},
+			//可向store.commit传入额外的参数，即mutation的载荷,一般是一个对象
+			incrementN(state,payload){
+				state.count += payload.amount
+			}
+		}
+	})
+
+	const Counter = {
+		template:'<div v-on:click="clicked">{{count}}</div>',		
+		computed:{
+			count(){
+				return this.$store.state.count;
+			}
+		},
+		methods:{
+			// 在组件中提交 Mutation
+			clicked:function(){
+				this.$store.commit('increment')
+			}
+		}
+	}
+
+	const app = new Vue({
+		el:'#app',
+		store,//在根实例中注册 store 选项，该 store 实例会注入到根组件下的所有子组件中
+		components:{Counter},
+		template:'<div class="app">\
+		<counter></counter>\
+		</div>'
+	})
+
+	//提交mutation的方式
+	
+	// store.commit('increment')
+	
+	// store.commit('increment', {
+	// 	amount:10
+	// })
+
+	</script>
+
+</body>
+</html>
